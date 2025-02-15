@@ -3,9 +3,9 @@ import { useNavigate, useLocation, useSearchParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import algoliasearch from 'algoliasearch';
 import { Search, MapPin, ShoppingCart, Trash2, Package } from 'lucide-react';
-import type { SearchResult } from '../../shared/types';
-import { setUpc, setSearchResults } from '../../shared/store/checkoutSlice';
-import type { RootState } from '../../shared/store/store';
+import type { SearchResult } from '../shared/types';
+import { setUpc, setSearchResults } from '../store/checkoutSlice';
+import type { RootState } from '../store/store';
 
 const client = algoliasearch(
   import.meta.env.VITE_ALGOLIA_APP_ID,

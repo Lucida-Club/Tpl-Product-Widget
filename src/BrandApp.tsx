@@ -7,6 +7,8 @@ import OrderReview from './components/OrderReview';
 import ScrollToTop from './components/ScrollToTop';
 
 function BrandApp() {
+
+  alert('asdf')
   return (
     <div className="min-h-screen bg-gray-50">
       <ScrollToTop />
