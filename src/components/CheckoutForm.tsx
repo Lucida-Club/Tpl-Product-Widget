@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { ArrowLeft } from 'lucide-react';
 import type { SearchResult } from '../types';
@@ -20,11 +20,12 @@ const US_STATES = [
 function CheckoutForm() {
   const location = useLocation();
   const navigate = useNavigate();
+  const { id } = useParams();
   const dispatch = useDispatch();
   const { product: storedProduct, quantity: storedQuantity, formData: storedFormData } = 
     useSelector((state: RootState) => state.checkout);
   
-  const { product: locationProduct } = location.state as { product: SearchResult };
+  const { product: locationProduct } = location.state as { product: SearchResult } || {};
   const [quantity, setLocalQuantity] = useState(storedQuantity);
   
   useEffect(() => {
@@ -34,6 +35,18 @@ function CheckoutForm() {
   }, [locationProduct, dispatch]);
 
   const product = storedProduct || locationProduct;
+  
+  // If no product is available, redirect to home
+  useEffect(() => {
+    if (!product && !locationProduct) {
+      navigate('/');
+    }
+  }, [product, locationProduct, navigate]);
+
+  if (!product) {
+    return null;
+  }
+
   const maxQuantity = product.totalQuantityOnHand || 1;
 
   const handleQuantityChange = (newQuantity: number) => {
@@ -69,6 +82,7 @@ function CheckoutForm() {
       lastName: formData.get('lastName') as string,
       email: formData.get('email') as string,
       phone: formData.get('phone') as string,
+      dateOfBirth: formData.get('dateOfBirth') as string,
       state: formData.get('state') as string,
     };
     
@@ -157,6 +171,21 @@ function CheckoutForm() {
                     className="mt-1 block w-full rounded-md border border-gray-300 bg-white py-2 px-3 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-blue-500"
                   />
                   <p className="mt-1 text-sm text-gray-500">Format: XXX-XXX-XXXX</p>
+                </div>
+
+                <div>
+                  <label htmlFor="dateOfBirth" className="block text-sm font-medium text-gray-700">
+                    Date of Birth
+                  </label>
+                  <input
+                    type="date"
+                    id="dateOfBirth"
+                    name="dateOfBirth"
+                    required
+                    defaultValue={storedFormData?.dateOfBirth}
+                    className="mt-1 block w-full rounded-md border border-gray-300 bg-white py-2 px-3 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-blue-500"
+                  />
+                  <p className="mt-1 text-sm text-gray-500">Must be 21 years or older</p>
                 </div>
 
                 <div>

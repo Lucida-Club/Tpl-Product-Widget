@@ -14,6 +14,7 @@ interface OrderData {
     lastName: string;
     email: string;
     phone: string;
+    dateOfBirth: string;
     state: string;
   };
 }
@@ -29,6 +30,17 @@ function OrderConfirmation() {
     // Reset the checkout state when the confirmation page is loaded
     dispatch(resetCheckout());
   }, [dispatch]);
+
+  // Format date of birth for display
+  const formatDate = (dateString: string) => {
+    if (!dateString) return 'Not provided';
+    const date = new Date(dateString);
+    return date.toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    });
+  };
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center p-8">
@@ -75,6 +87,9 @@ function OrderConfirmation() {
               )}
               <p>
                 <span className="font-medium">Phone:</span> {formData.phone}
+              </p>
+              <p>
+                <span className="font-medium">Date of Birth:</span> {formatDate(formData.dateOfBirth)}
               </p>
               <p>
                 <span className="font-medium">State:</span> {formData.state}

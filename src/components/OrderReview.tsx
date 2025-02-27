@@ -45,6 +45,17 @@ function OrderReview() {
     }
   };
 
+  // Format date of birth for display
+  const formatDate = (dateString: string) => {
+    if (!dateString) return 'Not provided';
+    const date = new Date(dateString);
+    return date.toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    });
+  };
+
   return (
     <div className="min-h-screen bg-gray-50 p-4 sm:p-8">
       <div className="max-w-3xl mx-auto">
@@ -103,6 +114,7 @@ function OrderReview() {
                     </p>
                     <p className="text-gray-700">{formData.email || 'No email provided'}</p>
                     <p className="text-gray-700">{formData.phone}</p>
+                    <p className="text-gray-700">Date of Birth: {formatDate(formData.dateOfBirth)}</p>
                     <p className="text-gray-700">{formData.state}</p>
                   </div>
                 </div>

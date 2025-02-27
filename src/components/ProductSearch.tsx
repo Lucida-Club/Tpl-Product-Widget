@@ -3,7 +3,7 @@ import { useNavigate, useLocation, useSearchParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import algoliasearch from 'algoliasearch';
 import { Search, MapPin, ShoppingCart, Trash2, Package } from 'lucide-react';
-import type { SearchResult } from '../shared/types';
+import type { SearchResult } from '../types';
 import { setUpc, setSearchResults } from '../store/checkoutSlice';
 import type { RootState } from '../store/store';
 
@@ -23,9 +23,9 @@ function ProductSearch() {
   const storedResults = useSelector((state: RootState) => state.checkout.searchResults);
   
   const [searchTerm, setSearchTerm] = useState(storedUpc || searchParams.get('upc') || '');
-  const [results, setResults] = useState<SearchResult[]>(storedResults);
+  const [results, setResults] = useState<SearchResult[]>(storedResults || []);
   const [loading, setLoading] = useState(false);
-  const [productInfo, setProductInfo] = useState<SearchResult | null>(storedResults[0] || null);
+  const [productInfo, setProductInfo] = useState<SearchResult | null>(storedResults?.[0] || null);
 
   const formatDistance = (meters: number): string => {
     const miles = meters * 0.000621371;
@@ -86,12 +86,12 @@ function ProductSearch() {
       setSearchTerm(upc);
       dispatch(setUpc(upc));
       handleSearch(upc);
-    } else if (storedUpc && !results.length) {
+    } else if (storedUpc && (!results || !results.length)) {
       setSearchTerm(storedUpc);
       setSearchParams({ upc: storedUpc });
       handleSearch(storedUpc);
     }
-  }, [searchParams, dispatch, handleSearch, storedUpc, results.length, setSearchParams]);
+  }, [searchParams, dispatch, handleSearch, storedUpc, results, setSearchParams]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -104,7 +104,7 @@ function ProductSearch() {
   };
 
   const handleCheckout = (item: SearchResult) => {
-    navigate(`/checkout/${item.objectID}`, { state: { product: item } });
+    navigate(`/checkout/${encodeURIComponent(item.objectID)}`, { state: { product: item } });
   };
 
   const handleClearSearch = () => {
