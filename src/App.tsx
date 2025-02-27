@@ -10,7 +10,7 @@ import Navbar from './components/Navbar';
 function App() {
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">
-      <Navbar />
+      {/* <Navbar /> */}
       <main className="flex-grow">
         <ScrollToTop />
         <Routes>
